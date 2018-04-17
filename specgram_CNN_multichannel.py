@@ -88,43 +88,6 @@ Y = np.load("Y_"+str(clm_num)+"_"+str(clm_num)+".npy")
 (X_train,X_test,Y_train,Y_test) = train_test_split(X,Y,test_size=0.2)
 
 
-def AlexNet():
-    model = Sequential()
-
-    # 第1畳み込み層
-    model.add(Conv2D(96, 11, strides=(4,4), bias_initializer=Constant(1), input_shape=(X.shape[1], X.shape[2], 10)))
-    model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
-    model.add(BatchNormalization())
-
-    # 第２畳み込み層
-    model.add(Conv2D(256, 5, bias_initializer=Constant(1)))
-    model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
-    model.add(BatchNormalization())
-
-    model.add(Dropout(0.5))
-
-    # 第３~5畳み込み層
-    model.add(Conv2D(384, 3,bias_initializer=Constant(0)))
-    model.add(Conv2D(384, 3, bias_initializer=Constant(1)))
-    model.add(Conv2D(256, 3, bias_initializer=Constant(1)))
-    model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
-    model.add(BatchNormalization())
-
-    # 密結合層
-    model.add(Flatten())
-    model.add(Dense(4096))
-    model.add(Dropout(0.5))
-    model.add(Dense(4096))
-    model.add(Dropout(0.5))
-
-    # 読み出し層
-    model.add(Dense(1, activation='sigmoid'))
-
-    model.compile(optimizer=SGD(lr=0.01), loss='binary_crossentropy', metrics=['accuracy'])
-    model.summary()
-    return model
-
-
 def resnet():
     model = ResnetBuilder.build_resnet_101((10,256,256),1)
     model.compile(optimizer=Adam(lr=0.001), loss='binary_crossentropy', metrics=['accuracy'])
